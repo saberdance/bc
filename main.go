@@ -2,20 +2,17 @@ package main
 
 import (
 	"fmt"
+	"time"
 
-	"github.com/suutaku/community-chain/src/lib"
+	usbmonitor "github.com/saberdance/bc/src/UsbMonitor"
 )
 
-func TestWallet() {
-	var wa = lib.LoadWallet("./ccw.key")
-	// wa.GenPrivKey()
-	fmt.Println(wa)
-	fmt.Println("wa")
-	fmt.Println(wa.Key)
-	fmt.Println(wa.Key.PubKey())
-	fmt.Println(wa.Key.PubKey().Address())
-}
-
 func main() {
-	TestWallet()
+	//Fake_StartListen 的参数为需要Channel返回的值
+	usbmonitor.Fake_StartListen(0)
+	for {
+		x := <-usbmonitor.Channel
+		fmt.Printf("Channel Ret: %d\n", x)
+		time.Sleep(time.Second * 2)
+	}
 }
