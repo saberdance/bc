@@ -25,8 +25,8 @@ func Instance() *Monitor {
 
 func Fake_ListenFunc(needret int) {
 	for {
-		Channel <- needret
 		time.Sleep(time.Second * 2)
+		Channel <- needret
 	}
 }
 

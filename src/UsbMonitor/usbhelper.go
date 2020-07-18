@@ -44,9 +44,9 @@ func CheckUsbCert() (int, error) {
 
 func ListenFunc() {
 	for {
+		time.Sleep(time.Second * 2)
 		ret, _ := CheckUsbCert()
 		Channel <- ret
-		time.Sleep(time.Second * 2)
 	}
 }
 
