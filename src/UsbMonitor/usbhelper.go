@@ -18,10 +18,22 @@ func StrPtr(s string) uintptr {
 	return uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(s)))
 }
 
+func PtrToStr(vcode uintptr) string {
+	var vbyte []byte
+	for {
+		sbyte := *((*byte)(unsafe.Pointer(vcode)))
+		if sbyte == 0 {
+			break
+		}
+		vbyte = append(vbyte, sbyte)
+		vcode += 1
+	}
+	return string(vbyte)
+}
+
 func CheckUsbCert() (int, error) {
 	dir, _ := os.Getwd()
 	dllPath := dir + "\\uc\\uc.dll"
-	fmt.Printf("dllPath: %s\n", dllPath)
 	handle, err := syscall.LoadLibrary(dllPath)
 	if err != nil {
 		fmt.Printf("Error: %s\n", err)
@@ -40,6 +52,28 @@ func CheckUsbCert() (int, error) {
 	}
 	fmt.Println("检查USB结果:", ret)
 	return int(ret), err
+}
+
+func GetPrivateKey() (string, error) {
+	dir, _ := os.Getwd()
+	dllPath := dir + "\\uc\\uc.dll"
+	handle, err := syscall.LoadLibrary(dllPath)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return "", err
+	}
+	defer syscall.FreeLibrary(handle)
+	keyReader, err := syscall.GetProcAddress(handle, "GetPrivateKey")
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return "", err
+	}
+	ret, _, _ := syscall.Syscall(keyReader, 0, 0, 0, 0)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return "", err
+	}
+	return PtrToStr(ret), err
 }
 
 func ListenFunc() {

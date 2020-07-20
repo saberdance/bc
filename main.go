@@ -19,4 +19,8 @@ func main() {
 	y := usbmonitor.Fake_GetPrivateKey("1122334455")
 	fmt.Printf("fake: %s\n", x)
 	fmt.Printf("fake: %s\n", y)
+	z, _ := usbmonitor.GetPrivateKey()
+	fmt.Printf("-----Get Usb Key-----\n")
+	fmt.Printf(z)
+	fmt.Printf("\n---------------------\n")
 }
